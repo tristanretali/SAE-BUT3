@@ -6,7 +6,7 @@ load_dotenv()
 SPOONACULAR_API_KEY = os.environ.get('SPOONACULAR_API_KEY')
 
 
-def recover_ten_recipes(offset: int) -> list:
+def recover_one_hundred_recipes(offset: int) -> list:
     recipes_data = []
     url = f'https://api.spoonacular.com/recipes/complexSearch?apiKey={SPOONACULAR_API_KEY}'
     params = {
@@ -25,3 +25,6 @@ def recover_recipe_details(recipe_id: int) -> dict:
     response = requests.get(url)
     data = response.json()
     return data
+
+
+print(recover_one_hundred_recipes(0))

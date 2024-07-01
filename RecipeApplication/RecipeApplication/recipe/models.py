@@ -2,6 +2,7 @@ from django.db import models
 from wagtail.fields import StreamField
 from wagtail.blocks import CharBlock, StructBlock, ListBlock, IntegerBlock, TextBlock
 
+
 class Ingredient(models.Model):
     ingredient_id = models.IntegerField()
     aisle = models.CharField(max_length=255)
@@ -13,7 +14,8 @@ class Ingredient(models.Model):
     def __str__(self):
         return self.nameClean
 
-class RecipePage(models.Model):
+
+class Recipe(models.Model):
     vegetarian = models.BooleanField(default=False)
     vegan = models.BooleanField(default=False)
     cheap = models.BooleanField(default=False)
@@ -37,6 +39,3 @@ class RecipePage(models.Model):
             ]))),
         ])),
     ], blank=True, null=True)
-
-
-
