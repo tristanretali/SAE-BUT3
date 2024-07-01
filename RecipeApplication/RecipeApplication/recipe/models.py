@@ -1,9 +1,6 @@
 from django.db import models
 from wagtail.fields import StreamField
 from wagtail.blocks import CharBlock, StructBlock, ListBlock, IntegerBlock, TextBlock
-from wagtail.snippets.models import register_snippet
-from modelcluster.fields import ParentalKey
-from modelcluster.models import ClusterableModel
 
 class Ingredient(models.Model):
     ingredient_id = models.IntegerField()
