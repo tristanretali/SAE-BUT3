@@ -12,11 +12,11 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         fake = Faker()
 
-        for i in range(kwargs['number']):  # Adjust the number of users you want to create
+        for i in range(int(kwargs['number'])):  # Adjust the number of users you want to create
             username = fake.user_name()
             password = fake.password(length=12, special_chars=True, digits=True, upper_case=True, lower_case=True)
             email = fake.email()
 
-            User.objects.create_user(username=username, email=email, password=password)
+            User.objects.create(username=username, email=email, password=password)
 
             self.stdout.write(self.style.SUCCESS('Ajout des utilisateurs terminé'))
