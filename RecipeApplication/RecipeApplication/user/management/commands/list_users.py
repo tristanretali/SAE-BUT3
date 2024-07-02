@@ -8,4 +8,5 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         users = User.objects.all()
         for user in users:
-            self.stdout.write(self.style.SUCCESS(f'Username: {user.username}, password: {user.password}, email: {user.email}'))
+            self.stdout.write(
+                self.style.SUCCESS(f'Username: {user.username}, password: {user.password}, email: {user.email}'))

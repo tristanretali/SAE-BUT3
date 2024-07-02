@@ -1,6 +1,6 @@
 import json
 
-from django.contrib.auth import login as django_login, logout as django_logout, authenticate
+from django.contrib.auth import login as django_login, logout as django_logout, authenticate, get_user
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
 
@@ -62,6 +62,29 @@ def logout(request):
             return HttpResponse('Error logging out: {}'.format(str(e)), status=500)
     else:
         return HttpResponseBadRequest("Only POST method is supported")
+
+
+@csrf_exempt
+def me(request):
+    if request.method == 'GET':
+        try:
+            user_id = request.session.get('user_id')
+            if user_id:
+                user = get_user(request)
+                if user is not None:
+                    return JsonResponse({
+                        'superUser': user.is_superuser,
+                        'username': user.username,
+                        'email': user.email,
+                    })
+                else:
+                    return JsonResponse({"detail": "User not found"}, status=404)
+            else:
+                return JsonResponse({"detail": "User is not logged in"}, status=400)
+        except Exception as e:
+            return HttpResponse('Error getting current user: {}'.format(str(e)), status=500)
+    else:
+        return HttpResponseBadRequest("Only GET method is supported")
 
 
 class UserViewSet(viewsets.ModelViewSet):
