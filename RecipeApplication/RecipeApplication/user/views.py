@@ -1,6 +1,6 @@
 import json
 
-from django.contrib.auth import login as django_login, logout as django_logout
+from django.contrib.auth import login as django_login, logout as django_logout, authenticate
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
 
@@ -14,8 +14,11 @@ def register(request):
     if request.method == 'POST':
         try:
             json_data = json.loads(request.body)
-            User.objects.create(username=json_data['username'], password=json_data['password'],
-                                email=json_data['email'])
+            User.objects.create_user(
+                json_data['username'],
+                json_data['email'],
+                json_data['password'],
+            )
             return HttpResponse('OK')
         except json.JSONDecodeError:
             return HttpResponse('Internal Server Error', status=400)
@@ -28,14 +31,14 @@ def login(request):
     if request.method == 'POST':
         try:
             json_data = json.loads(request.body)
-            user = User.objects.get(username=json_data['username'], password=json_data['password'])
+            user = authenticate(username=json_data['username'], password=json_data['password'])
             if user is not None:
                 django_login(request, user)
                 request.session['user_id'] = user.id
                 return JsonResponse({
-                        'username': user.username,
-                        'email': user.email,
-                    })
+                    'username': user.username,
+                    'email': user.email,
+                })
             else:
                 return JsonResponse({"detail": "Invalid credentials"}, status=401)
 

@@ -17,6 +17,6 @@ class Command(BaseCommand):
             password = fake.password(length=12, special_chars=True, digits=True, upper_case=True, lower_case=True)
             email = fake.email()
 
-            User.objects.create(username=username, email=email, password=password)
+            User.objects.create_user(username=username, email=email, password=password)
 
             self.stdout.write(self.style.SUCCESS('Ajout des utilisateurs terminé'))
