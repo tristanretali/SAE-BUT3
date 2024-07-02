@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from faker import Faker
-from user.models import User
+from django.contrib.auth.models import User
 
 
 class Command(BaseCommand):
