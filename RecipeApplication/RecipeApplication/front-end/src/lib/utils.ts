@@ -53,14 +53,18 @@ export const logout = async () => {
 	return response.json();
 };
 
-export const getUser = async () => {
-	const response = await fetch(`${API_URL}/me`, {
-		credentials: "include",
-	});
-	if (!response.ok) {
-		return null;
-	}
-	return response.json();
+export const getUser = () => {
+	// const response = await fetch(`${API_URL}/me`, {
+	// 	credentials: "include",
+	// });
+	// if (!response.ok) {
+	// 	return null;
+	// }
+	// return response.json();
+	return {
+		username: "johndoe",
+		email: "john.doe@gmail.com",
+	};
 };
 
 String.prototype.toTitleCase = function () {
