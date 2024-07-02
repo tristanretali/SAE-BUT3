@@ -1,16 +1,11 @@
 import json
 
-from django.contrib.auth import authenticate, login as django_login, logout as django_logout
+from django.contrib.auth import login as django_login, logout as django_logout
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
 
-# Create your views here.
-
 from django.contrib.auth.models import User
-from rest_framework import generics, status, viewsets, permissions
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework import viewsets
 from .serializers import UserSerializer
 
 
@@ -38,7 +33,6 @@ def login(request):
                 django_login(request, user)
                 request.session['user_id'] = user.id
                 return JsonResponse({
-                        'user_id': user.id,
                         'username': user.username,
                         'email': user.email,
                     })
@@ -61,7 +55,6 @@ def logout(request):
                 return HttpResponse('Logout successful')
             else:
                 return JsonResponse({"detail": "User is not logged in"}, status=400)
-
         except Exception as e:
             return HttpResponse('Error logging out: {}'.format(str(e)), status=500)
     else:
