@@ -10,21 +10,18 @@ export function RecipyNavbar() {
 
 	return (
 		<>
-			<NavigationMenu className="h-20 justify-between max-w-full px-4 flex-grow-0 py-5">
+			<NavigationMenu className="h-20 justify-between max-w-full px-4 py-5">
 				<NavigationMenuList>
 					<NavigationMenuItem className="inline-flex">
 						<Logo withText={true} size={35}/>
 					</NavigationMenuItem>
 				</NavigationMenuList>
 				<NavigationMenuList className="space-x-6">
-					<NavigationLink href="/docs">
-					About
-					</NavigationLink>
-					<NavigationLink href="/service">
-					Service
-					</NavigationLink>
 				</NavigationMenuList>
-				<NavigationMenuList>
+				<NavigationMenuList className="space-x-7">
+					<NavigationLink href="/docs" className="text-primary/80">
+						Suggest a recipe
+					</NavigationLink>
 					<NavigationMenuItem className="inline-flex">
 						<NavigationUserDropdown />
 					</NavigationMenuItem>

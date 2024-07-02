@@ -9,14 +9,14 @@ export default function UserAvatar({ user }: UserAvatarProps) {
 
 	const getFallbackAvatar = () => {
 		if (user) {
-			return user.firstName.charAt(0) + user.lastName.charAt(0);
+			return user.username.substring(0, 2).toUpperCase();
 		}
 		return "";
 	}
 
 	return (
 		<Avatar>
-			<AvatarImage src={""} alt={user.firstName} />
+			<AvatarImage src={""} alt={user.username} />
 			<AvatarFallback>{getFallbackAvatar()}</AvatarFallback>
 		</Avatar>
 	)
