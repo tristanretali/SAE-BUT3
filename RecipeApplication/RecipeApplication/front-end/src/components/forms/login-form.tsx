@@ -18,7 +18,7 @@ import { useToast } from "../ui/use-toast";
 import { useAuth } from "../providers/auth-provider";
 
 const loginFormSchema = z.object({
-	email: z.string().email("Invalid email address"),
+	username: z.string().min(1, "Username is required"),
 	password: z.string().min(1, "Password is required"),
 });
 
@@ -32,7 +32,7 @@ export function LoginForm() {
 	const form = useForm<z.infer<typeof loginFormSchema>>({
 		resolver: zodResolver(loginFormSchema),
 		defaultValues: {
-			email: "",
+			username: "",
 			password: "",
 		},
 	});
@@ -58,8 +58,8 @@ export function LoginForm() {
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 				<FormField name="email" render={({ field }) => (
-					<FormInput label="Email">
-						<Input placeholder="example@example.com" {...field}/>
+					<FormInput label="Username">
+						<Input placeholder="johndoe" {...field}/>
 					</FormInput>
 				)}>
 				</FormField>
