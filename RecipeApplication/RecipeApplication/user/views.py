@@ -3,9 +3,8 @@ import json
 from django.contrib.auth import login as django_login, logout as django_logout, authenticate, get_user
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
-
 from django.contrib.auth.models import User
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from .serializers import UserSerializer
 
 
