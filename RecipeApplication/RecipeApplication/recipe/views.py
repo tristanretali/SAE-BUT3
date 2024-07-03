@@ -6,13 +6,13 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Recipe, Ingredient
 from rest_framework import viewsets
 from .serializers import RecipeSerializer,IngredientSerializer
-
+from rest_framework.decorators import action
 
 @csrf_exempt
 def get_ingredients_by_name(request):
     if request.method == 'GET':
         try:
-            nameClean = request.GET.get('nameClean')
+            nameClean = request.GET.get('name')
             if nameClean:
                 # Récupère les ingrédients qui contiennent 'nameClean' dans leur nom
                 ingredients = Ingredient.objects.filter(nameClean__icontains=nameClean)
@@ -113,6 +113,31 @@ class IngredientViewSet(viewsets.ModelViewSet):
     """
     queryset = Ingredient.objects.all().order_by('nameClean')
     serializer_class = IngredientSerializer
+    @action(detail=False, methods=['get'])
+    def search(self,request):
+            try:
+                nameClean = request.GET.get('name')
+                if nameClean:
+                    # Récupère les ingrédients qui contiennent 'nameClean' dans leur nom
+                    ingredients = Ingredient.objects.filter(nameClean__icontains=nameClean)
+                    # enleve tout ceux qui ont '' comme nomClean
+                    ingredients = [ingredient for ingredient in ingredients if ingredient.nameClean != '']
+
+                    # Crée une liste des noms d'ingrédients uniques
+                    unique_ingredient_names = list(set([ingredient.nameClean for ingredient in ingredients]))
+
+                    return JsonResponse({
+                        'ingredients': [
+                            {
+                                'name': name,
+                            }
+                            for name in unique_ingredient_names
+                        ]
+                    })
+                else:
+                    return JsonResponse({"detail": "Missing 'nameClean' parameter"}, status=400)
+            except Exception as e:
+                return JsonResponse({"detail": f"Error getting ingredients by name: {str(e)}"}, status=500)
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
