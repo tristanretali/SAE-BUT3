@@ -32,7 +32,7 @@ const recipes: Recipe[] = [
 export default function Page() {
 
 	const searchParams = useSearchParams()
-	const search = searchParams.get('value') || ''
+	const search = searchParams.get('q') || ''
 
 	const recipesResult = recipes.filter(recipe => recipe.name.toLowerCase().includes(search.toLowerCase()))
 

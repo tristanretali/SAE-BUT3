@@ -55,7 +55,7 @@ def logout(request):
             user_id = request.session.get('user_id')
             if user_id:
                 django_logout(request)
-                return HttpResponse('Logout successful')
+                return JsonResponse({"message":"Logout successful"}, status=200)
             else:
                 return JsonResponse({"detail": "User is not logged in"}, status=400)
         except Exception as e:
