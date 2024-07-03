@@ -57,7 +57,7 @@ export function LoginForm() {
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-				<FormField name="email" render={({ field }) => (
+				<FormField name="username" render={({ field }) => (
 					<FormInput label="Username">
 						<Input placeholder="johndoe" {...field}/>
 					</FormInput>
