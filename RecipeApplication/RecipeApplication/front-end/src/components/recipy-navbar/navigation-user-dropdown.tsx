@@ -6,12 +6,9 @@ import { logout } from "@/lib/utils";
 import { navigate } from "@/app/actions";
 import { useAuth } from "../providers/auth-provider";
 import UserAvatar from "../user-avatar";
+import { WAGTAIL_URL } from "@/lib/constants";
 
-interface NavigationUserDropdownProps {
-	
-}
-
-export default function NavigationUserDropdown({}: NavigationUserDropdownProps) {
+export default function NavigationUserDropdown() {
 
 	const { user, setAuth } = useAuth();
 
@@ -41,10 +38,14 @@ export default function NavigationUserDropdown({}: NavigationUserDropdownProps) 
 							</div>
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem>
-							<Icons.role className="mr-2 w-4 h-4"/>
-							Admin panel
-						</DropdownMenuItem>
+						{user.isSuperuser && (
+							<Link href={`${WAGTAIL_URL}/admin`}>
+								<DropdownMenuItem>
+									<Icons.role className="mr-2 w-4 h-4"/>
+									Admin panel
+							</DropdownMenuItem>
+							</Link>
+						)}
 						<DropdownMenuItem>
 							<Icons.user className="mr-2 w-4 h-4"/>
 							Profile
