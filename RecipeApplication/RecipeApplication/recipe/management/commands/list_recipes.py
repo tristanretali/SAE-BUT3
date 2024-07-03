@@ -19,7 +19,7 @@ class Command(BaseCommand):
                     self.stdout.write(f'    Ready in Minutes: {recipe.readyInMinutes}')
                     self.stdout.write(f'    Servings: {recipe.servings}')
                     self.stdout.write(f'    Image: {recipe.image}')
-                    self.stdout.write(f'    Ingredients: {", ".join([ingredient.name for ingredient in recipe.ingredients.all()])}')
+                    self.stdout.write(f'    Ingredients: {", ".join([ingredient.nameClean for ingredient in recipe.ingredients.all()])}')
                     self.stdout.write(f'    Summary: {recipe.summary}')
                     self.stdout.write(f'    Cuisines: {", ".join([cuisine.name for cuisine in recipe.cuisines.all()])}')
                     self.stdout.write(f'    Instructions: {recipe.instructions}')
@@ -28,6 +28,14 @@ class Command(BaseCommand):
                         self.stdout.write(f'        {analyzed_instruction.name or "Unnamed Instruction"}:')
                         for step in analyzed_instruction.steps.all():
                             self.stdout.write(f'            Step {step.number}: {step.step}')
+                            # ingredient with amount and unit
+                            self.stdout.write('                Ingredients:')
+                            for ingredient in step.ingredients.all():
+                                self.stdout.write(f'                    {ingredient.nameClean}: {ingredient.amount} {ingredient.unit}')
+                            # equipment
+                            self.stdout.write('                Equipment:')
+                            for equipment in step.equipment.all():
+                                self.stdout.write(f'                    {equipment.name}')  
 
             else:
                 self.stdout.write(self.style.WARNING('Aucune recette trouvée dans la base de données.'))

@@ -10,7 +10,7 @@ def recover_one_hundred_recipes(offset: int) -> list:
     recipes_data = []
     url = f'https://api.spoonacular.com/recipes/complexSearch?apiKey={SPOONACULAR_API_KEY}'
     params = {
-        'number': 2,
+        'number': 100,
         'offset': offset
     }
     response = requests.get(url, params=params)

@@ -6,7 +6,7 @@ class Command(BaseCommand):
     help = 'Ajoute une recette à la base de données'
 
     def handle(self, *args, **kwargs):
-        recipes = recover_api_data.recover_one_hundred_recipes(1)
+        recipes = recover_api_data.recover_one_hundred_recipes(0)
         for item in recipes:
             try:
                 # Créez l'objet Recipe sans les champs ManyToMany
@@ -32,10 +32,24 @@ class Command(BaseCommand):
                     cuisine, created = Cuisine.objects.get_or_create(name=cuisine_name)
                     recipe.cuisines.add(cuisine)
                 
-                # Ajoutez les ingrédients après avoir sauvegardé l'objet Recipe
-                ingredients_ids = item.get('ingredients_ids', [])
-                ingredients = Ingredient.objects.filter(id__in=ingredients_ids) if ingredients_ids else []
-                recipe.ingredients.set(ingredients)
+                for ingredient_data in item.get('extendedIngredients', []):
+                    ingredient_id = ingredient_data.get('id')
+                    if ingredient_id and ingredient_id != 0:
+                        ingredient, created = Ingredient.objects.get_or_create(
+                            ingredient_id=ingredient_id,
+                            defaults={
+                                'aisle': ingredient_data.get('aisle'),
+                                'nameClean': ingredient_data.get('nameClean'),
+                                'amount': ingredient_data.get('amount'),
+                                'unit': ingredient_data.get('unit'),
+                            }
+                        )
+                        recipe.ingredients.add(ingredient)
+
+                # # Ajoutez les ingrédients après avoir sauvegardé l'objet Recipe
+                # ingredients_ids = item.get('ingredients_ids', [])
+                # ingredients = Ingredient.objects.filter(id__in=ingredients_ids) if ingredients_ids else []
+                # recipe.ingredients.set(ingredients)
 
                 # Ajoutez les analyzedInstructions après avoir sauvegardé l'objet Recipe
                 analyzed_instructions = item.get('analyzedInstructions', [])
@@ -55,11 +69,10 @@ class Command(BaseCommand):
                                 ingredient, created = Ingredient.objects.get_or_create(
                                     ingredient_id=ingredient_id,
                                     defaults={
-                                        'aisle': ingredient_data.get('aisle', "test aisle"),
-                                        'nameClean': ingredient_data.get('nameClean', "test nameClean"),
+                                        'aisle': ingredient_data.get('aisle'),
+                                        'nameClean': ingredient_data.get('nameClean'),
                                         'amount': ingredient_data.get('amount', 10),
-                                        'unit': ingredient_data.get('unit', "test unit"),
-                                        'image': ingredient_data.get('image', "image")
+                                        'unit': ingredient_data.get('unit'),
                                     }
                                 )
                                 step.ingredients.add(ingredient)
@@ -71,7 +84,6 @@ class Command(BaseCommand):
                             if equipment_name:
                                 equipment, created = Equipment.objects.get_or_create(
                                     name=equipment_name,
-                                    defaults={'image': equipment_data.get('image', "image")}
                                 )
                                 step.equipment.add(equipment)
                             else:
