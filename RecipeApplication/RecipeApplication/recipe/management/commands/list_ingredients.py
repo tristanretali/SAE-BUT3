@@ -11,7 +11,7 @@ class Command(BaseCommand):
             if ingredients:
                 self.stdout.write(self.style.SUCCESS('Liste des ingrédients :'))
                 for ingredient in ingredients:
-                    self.stdout.write(f'ID: {ingredient.id}, Aisle: {ingredient.aisle}, Image: {ingredient.image}, '
+                    self.stdout.write(f'ID: {ingredient.ingredient_id}, Aisle: {ingredient.aisle}, Image: {ingredient.image}, '
                                       f'NameClean: {ingredient.nameClean}, Amount: {ingredient.amount} {ingredient.unit}')
             else:
                 self.stdout.write(self.style.WARNING('Aucun ingrédient trouvé dans la base de données.'))

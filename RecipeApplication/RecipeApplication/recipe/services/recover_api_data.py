@@ -10,11 +10,12 @@ def recover_one_hundred_recipes(offset: int) -> list:
     recipes_data = []
     url = f'https://api.spoonacular.com/recipes/complexSearch?apiKey={SPOONACULAR_API_KEY}'
     params = {
-        'number': 100,
+        'number': 2,
         'offset': offset
     }
     response = requests.get(url, params=params)
     data = response.json()
+    print(data)
     for recipe_data in data["results"]:
         recipes_data.append(recover_recipe_details(recipe_data['id']))
     return recipes_data

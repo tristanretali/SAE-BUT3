@@ -1,84 +1,89 @@
 from django.core.management.base import BaseCommand
-from recipe.models import Recipe, Ingredient
-from wagtail.blocks import StreamValue
+from recipe.models import Recipe, Ingredient, AnalyzedInstruction, Step, Cuisine, Equipment
+from recipe.services import recover_api_data
 
 class Command(BaseCommand):
     help = 'Ajoute une recette à la base de données'
 
-    def add_arguments(self, parser):
-        parser.add_argument('-t', '--title', type=str, required=True, help='Titre de la recette')
-        parser.add_argument('-vege', '--vegetarian',type=bool, help='La recette est végétarienne')
-        parser.add_argument('-vg', '--vegan',type=bool,  help='La recette est végétalienne')
-        parser.add_argument('-ch', '--cheap', type=bool, help='La recette est bon marché')
-        parser.add_argument('-hs', '--healthScore', type=int, default=0, help='Score santé de la recette')
-        parser.add_argument('-rim', '--readyInMinutes', type=int, help='Temps de préparation en minutes')
-        parser.add_argument('-s', '--servings', type=int, help='Nombre de portions')
-        parser.add_argument('-i', '--image', type=str, help='Image de la recette')
-        parser.add_argument('-ing', '--ingredients', type=int, nargs='+', help='IDs des ingrédients')
-        parser.add_argument('-sm', '--summary', type=str, help='Résumé de la recette')
-        parser.add_argument('-cu', '--cuisines', type=str, nargs='+', help='Cuisines de la recette')
-        parser.add_argument('-ins', '--instructions', type=str, help='Instructions de la recette')
-        parser.add_argument('-ai', '--analyzedInstructions', type=str, nargs='+', help='Instructions analysées de la recette')
-
     def handle(self, *args, **kwargs):
-        try:
-            title = kwargs['title']
-            vegetarian = kwargs['vegetarian']
-            vegan = kwargs['vegan']
-            cheap = kwargs['cheap']
-            healthScore = kwargs['healthScore']
-            readyInMinutes = kwargs['readyInMinutes']
-            servings = kwargs['servings']
-            image = kwargs['image']
-            ingredients_ids = kwargs['ingredients']
-            summary = kwargs['summary']
-            cuisines = kwargs['cuisines']
-            instructions = kwargs['instructions']
-            analyzedInstructions = kwargs['analyzedInstructions']
-
-            ingredients = Ingredient.objects.filter(id__in=ingredients_ids) if ingredients_ids else []
-
-            recipe = Recipe.objects.create(
-                title=title,
-                vegetarian=vegetarian,
-                vegan=vegan,
-                cheap=cheap,
-                healthScore=healthScore,
-                readyInMinutes=readyInMinutes,
-                servings=servings,
-                image=image,
-                summary=summary,
-                instructions=instructions
-            )
-
-            if cuisines:
-                recipe.cuisines = StreamValue(recipe.cuisines.stream_block, [
-                    {'type': 'cuisine', 'value': cuisine} for cuisine in cuisines
-                ])
-
-            if analyzedInstructions:
-                analyzed_instructions_value = [
-                    {
-                        'type': 'instruction',
-                        'value': {
-                            'name': ins.split(':')[0],
-                            'steps': [
-                                {'number': idx + 1, 'step': step}
-                                for idx, step in enumerate(ins.split(':')[1].split(';'))
-                            ]
-                        }
-                    }
-                    for ins in analyzedInstructions
-                ]
-                recipe.analyzedInstructions = StreamValue(
-                    recipe.analyzedInstructions.stream_block, analyzed_instructions_value
+        recipes = recover_api_data.recover_one_hundred_recipes(1)
+        for item in recipes:
+            try:
+                # Créez l'objet Recipe sans les champs ManyToMany
+                recipe = Recipe(
+                    vegetarian=item.get('vegetarian', False),
+                    vegan=item.get('vegan', False),
+                    cheap=item.get('cheap', False),
+                    healthScore=item.get('healthScore', 0),
+                    title=item.get('title', ''),
+                    readyInMinutes=item.get('readyInMinutes'),
+                    servings=item.get('servings'),
+                    image=item.get('image'),
+                    summary=item.get('summary', ''),
+                    instructions=item.get('instructions', '')
                 )
+                
+                # Sauvegardez l'objet Recipe pour lui attribuer un ID
+                recipe.save()
 
-            recipe.save()
-            recipe.ingredients.set(ingredients)
+                # Ajoutez les cuisines après avoir sauvegardé l'objet Recipe
+                cuisines = item.get('cuisines', [])
+                for cuisine_name in cuisines:
+                    cuisine, created = Cuisine.objects.get_or_create(name=cuisine_name)
+                    recipe.cuisines.add(cuisine)
+                
+                # Ajoutez les ingrédients après avoir sauvegardé l'objet Recipe
+                ingredients_ids = item.get('ingredients_ids', [])
+                ingredients = Ingredient.objects.filter(id__in=ingredients_ids) if ingredients_ids else []
+                recipe.ingredients.set(ingredients)
 
-            self.stdout.write(self.style.SUCCESS('Recette ajoutée avec succès'))
-        except KeyError:
-            self.stdout.write(self.style.WARNING('Utilisation: python manage.py add_recipe -t <title> [-v] [-vg] [-c] [-hs <healthScore>] [-r <readyInMinutes>] [-s <servings>] [-i <image>] [-ing <ingredients>] [-sm <summary>] [-cu <cuisines>] [-ins <instructions>] [-ai <analyzedInstructions>]'))
-        except Exception as e:
-            self.stdout.write(self.style.ERROR(f'Une erreur est survenue: {e}'))
+                # Ajoutez les analyzedInstructions après avoir sauvegardé l'objet Recipe
+                analyzed_instructions = item.get('analyzedInstructions', [])
+                for instruction_data in analyzed_instructions:
+                    instruction = AnalyzedInstruction.objects.create(name=instruction_data.get('name', ''))
+                    for step_data in instruction_data.get('steps', []):
+                        step = Step.objects.create(
+                            number=step_data.get('number', 0),
+                            step=step_data.get('step', ''),
+                            length_number=step_data.get('length', {}).get('number', None),
+                            length_unit=step_data.get('length', {}).get('unit', None)
+                        )
+
+                        for ingredient_data in step_data.get('ingredients', []):
+                            ingredient_id = ingredient_data.get('id')
+                            if ingredient_id and ingredient_id != 0:
+                                ingredient, created = Ingredient.objects.get_or_create(
+                                    ingredient_id=ingredient_id,
+                                    defaults={
+                                        'aisle': ingredient_data.get('aisle', "test aisle"),
+                                        'nameClean': ingredient_data.get('nameClean', "test nameClean"),
+                                        'amount': ingredient_data.get('amount', 10),
+                                        'unit': ingredient_data.get('unit', "test unit"),
+                                        'image': ingredient_data.get('image', "image")
+                                    }
+                                )
+                                step.ingredients.add(ingredient)
+                            else:
+                                self.stdout.write(self.style.WARNING('Ingredient data is missing or has invalid id: {}'.format(ingredient_data)))
+
+                        for equipment_data in step_data.get('equipment', []):
+                            equipment_name = equipment_data.get('name')
+                            if equipment_name:
+                                equipment, created = Equipment.objects.get_or_create(
+                                    name=equipment_name,
+                                    defaults={'image': equipment_data.get('image', "image")}
+                                )
+                                step.equipment.add(equipment)
+                            else:
+                                self.stdout.write(self.style.WARNING('Equipment data is missing a name: {}'.format(equipment_data)))
+
+                        instruction.steps.add(step)
+
+                    recipe.analyzedInstructions.add(instruction)
+
+                recipe.save()
+                self.stdout.write(self.style.SUCCESS('Recette ajoutée avec succès'))
+            except KeyError as e:
+                self.stdout.write(self.style.WARNING('Probleme de clé: {}'.format(e)))
+            except Exception as e:
+                self.stdout.write(self.style.ERROR(f'Une erreur est survenue: {e}'))

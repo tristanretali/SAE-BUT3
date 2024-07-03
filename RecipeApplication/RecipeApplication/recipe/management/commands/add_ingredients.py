@@ -5,7 +5,7 @@ from recipe.models import Ingredient
 
 class Command(BaseCommand):
     help = 'Ajoute un ingrédient à la base de données'
-
+    
     def add_arguments(self, parser):
         parser.add_argument('-id', '--ingredient_id', type=int, help='ID de l\'ingrédient')
         parser.add_argument('-a', '--aisle', type=str, help='Aisle de l\'ingrédient')
