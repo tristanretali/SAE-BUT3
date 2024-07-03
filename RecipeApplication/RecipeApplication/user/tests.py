@@ -43,3 +43,28 @@ class RESTUSerTests(TestCase):
         self.assertEqual(response.data, serializer_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.client.force_authenticate(user=None)
+
+    def test_get_user(self):
+        # get article with id 1
+        response = self.client.get("/rest/users/2/")
+        serializer_data = UserSerializer(self.user1).data
+        self.assertEqual(response.data, serializer_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.client.force_authenticate(user=None)
+
+    def test_post_user(self):
+        new_data = {'username': 'Nouveau user', 'password': 'Nouveau User', 'email': 'nouveau@test.net'}
+        response = self.client.post("/rest/users/", new_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.client.force_authenticate(user=None)
+
+    def test_delete_user(self):
+        response = self.client.delete("/rest/users/2/")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        with self.assertRaises(User.DoesNotExist):
+            User.objects.get(id=self.user1.id)
+        self.client.force_authenticate(user=None)
+
+
+
+
