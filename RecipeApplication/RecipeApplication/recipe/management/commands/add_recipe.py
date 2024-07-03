@@ -38,10 +38,10 @@ class Command(BaseCommand):
                         ingredient, created = Ingredient.objects.get_or_create(
                             ingredient_id=ingredient_id,
                             defaults={
-                                'aisle': ingredient_data.get('aisle'),
-                                'nameClean': ingredient_data.get('nameClean'),
-                                'amount': ingredient_data.get('amount'),
-                                'unit': ingredient_data.get('unit'),
+                                'aisle': ingredient_data.get('aisle',''),
+                                'nameClean': ingredient_data.get('nameClean',''),
+                                'amount': ingredient_data.get('amount',''),
+                                'unit': ingredient_data.get('unit',''),
                             }
                         )
                         recipe.ingredients.add(ingredient)
@@ -69,10 +69,10 @@ class Command(BaseCommand):
                                 ingredient, created = Ingredient.objects.get_or_create(
                                     ingredient_id=ingredient_id,
                                     defaults={
-                                        'aisle': ingredient_data.get('aisle'),
-                                        'nameClean': ingredient_data.get('nameClean'),
-                                        'amount': ingredient_data.get('amount', 10),
-                                        'unit': ingredient_data.get('unit'),
+                                        'aisle': ingredient_data.get('aisle',''),
+                                        'nameClean': ingredient_data.get('nameClean',''),
+                                        'amount': ingredient_data.get('amount', 0),
+                                        'unit': ingredient_data.get('unit',''),
                                     }
                                 )
                                 step.ingredients.add(ingredient)

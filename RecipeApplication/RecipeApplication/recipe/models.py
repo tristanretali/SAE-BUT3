@@ -8,7 +8,7 @@ class Ingredient(models.Model):
     unit = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.name
+        return self.nameClean
 
 
 class Equipment(models.Model):
