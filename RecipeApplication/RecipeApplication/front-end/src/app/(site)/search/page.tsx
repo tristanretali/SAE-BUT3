@@ -1,5 +1,6 @@
 "use client";
 
+import { IngredientSelect } from "@/components/ingredient/ingredient-select";
 import { Recipe, RecipeCard } from "@/components/recipe/recipe-card";
 import { Searchbar } from "@/components/searchbar";
 import { useSearchParams } from "next/navigation";
@@ -38,6 +39,7 @@ export default function Page() {
 
 	return (
 		<div className="my-10 space-y-10 flex flex-col items-center w-screen">
+			<IngredientSelect/>
 			<Searchbar className="w-80" value={search}/>
 			<div className="grid grid-cols-3 gap-14 w-5/6">
 				{recipesResult.map((recipe, index) => (
