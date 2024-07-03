@@ -1,18 +1,25 @@
 from django.conf import settings
 from django.urls import include, path
 from django.contrib import admin
-
+from rest_framework import routers
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
-
 from search import views as search_views
+from user import views as user_views
+
+router = routers.DefaultRouter()
+router.register(r'users', user_views.UserViewSet)
 
 urlpatterns = [
     path("django-admin/", admin.site.urls),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
+    path('user/', include('user.urls')),
+    path('api/', include(router.urls)),  # routes REST générées
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),  # route pour documentation API REST
+    path('', include(wagtail_urls))
 ]
 
 
