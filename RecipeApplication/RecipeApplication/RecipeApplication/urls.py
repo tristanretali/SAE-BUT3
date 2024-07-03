@@ -9,7 +9,7 @@ from search import views as search_views
 from user import views as user_views
 from recipe import views as recipe_views
 
-router = routers.DefaultRouter()
+router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'users', user_views.UserViewSet)
 router.register(r'recipes',recipe_views.RecipeViewSet)
 router.register(r'ingredients',recipe_views.IngredientViewSet)
@@ -20,7 +20,6 @@ urlpatterns = [
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
     path('user/', include('user.urls')),
-    path('recipe/', include('recipe.urls')),
     path('rest/', include(router.urls)),  # routes REST générées
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),  # route pour documentation API REST
     path('', include(wagtail_urls))
