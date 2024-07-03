@@ -12,7 +12,7 @@ from recipe import views as recipe_views
 router = routers.DefaultRouter()
 router.register(r'users', user_views.UserViewSet)
 router.register(r'recipes',recipe_views.RecipeViewSet)
-router.register(r'recipes',recipe_views.IngredientViewSet)
+router.register(r'ingredients',recipe_views.IngredientViewSet)
 
 urlpatterns = [
     path("django-admin/", admin.site.urls),
