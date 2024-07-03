@@ -15,14 +15,12 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('username')
     serializer_class = UserSerializer
 
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=['POST'])
     def login(self, request):
         try:
             username = request.data.get('username', None)
             password = request.data.get('password', None)
-            # Voir pour le refaire fonctionner plus tard
-            # user = authenticate(username=username, password=password)
-            user = User.objects.get(username=username, password=password)
+            user = authenticate(username=username, password=password)
             if user is not None:
                 django_login(request, user)
                 request.session['user_id'] = user.id
