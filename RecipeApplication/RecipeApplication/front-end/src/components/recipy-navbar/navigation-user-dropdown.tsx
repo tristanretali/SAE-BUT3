@@ -42,6 +42,10 @@ export default function NavigationUserDropdown({}: NavigationUserDropdownProps) 
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem>
+							<Icons.role className="mr-2 w-4 h-4"/>
+							Admin panel
+						</DropdownMenuItem>
+						<DropdownMenuItem>
 							<Icons.user className="mr-2 w-4 h-4"/>
 							Profile
 						</DropdownMenuItem>
