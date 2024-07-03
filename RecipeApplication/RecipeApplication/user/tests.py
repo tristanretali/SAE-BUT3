@@ -11,3 +11,13 @@ class UserTest(TestCase):
     def test_number_user(self):
         users = User.objects.filter(username__startswith="Test")
         self.assertEqual(users.count(), 2)
+
+    def test_create_user(self):
+        User.objects.create_user(username="bob", password="bob", email="bob@test.net")
+        user = User.objects.get(username="bob")
+        self.assertEqual(user.email, "bob@test.net")
+
+    def test_delete_user(self):
+        User.objects.filter(username__startswith="Test").delete()  # remove 2 articles from 3
+        users = User.objects.all()  # 1 article should be remaining
+        self.assertEqual(users.count(), 1)
