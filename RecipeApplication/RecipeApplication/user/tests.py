@@ -52,11 +52,11 @@ class RESTUSerTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.client.force_authenticate(user=None)
 
-   # def test_post_user(self):
-    #    new_data = {'username': 'Nouveau user', 'password': 'Nouveau User', 'email': 'nouveau@test.net'}
-     #   response = self.client.post("/rest/users/", new_data, format='json')
-      #  self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-       # self.client.force_authenticate(user=None)
+    def test_post_user(self):
+        new_data = {'username': 'NouveauUser', 'password': 'NouveauUser', 'email': 'nouveau@test.net'}
+        response = self.client.post("/rest/users/", new_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.client.force_authenticate(user=None)
 
     def test_delete_user(self):
         response = self.client.delete("/rest/users/2/")
