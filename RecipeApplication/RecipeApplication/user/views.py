@@ -5,7 +5,7 @@ from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
 
 from django.contrib.auth.models import User
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from .serializers import UserSerializer
 
 
@@ -38,6 +38,7 @@ def login(request):
                 return JsonResponse({
                     'username': user.username,
                     'email': user.email,
+                    'isSuperuser': user.is_superuser
                 })
             else:
                 return JsonResponse({"detail": "Invalid credentials"}, status=401)
@@ -55,7 +56,7 @@ def logout(request):
             user_id = request.session.get('user_id')
             if user_id:
                 django_logout(request)
-                return HttpResponse('Logout successful')
+                return JsonResponse({"message":"Logout successful"}, status=200)
             else:
                 return JsonResponse({"detail": "User is not logged in"}, status=400)
         except Exception as e:

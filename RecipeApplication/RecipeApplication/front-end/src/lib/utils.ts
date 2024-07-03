@@ -10,7 +10,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const login = async (credentials: Pick<User, "username" | "password">) => {
-	const response = await fetch(`${API_URL_AUTH}/user/login`, {
+	const response = await fetch(`${API_URL_AUTH}/login/`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
@@ -25,7 +25,7 @@ export const login = async (credentials: Pick<User, "username" | "password">) =>
 };
 
 export const register = async (credentials: Pick<User, "username" | "password"> & { confirmPassword: string }) => {
-	const response = await fetch(`${API_URL_AUTH}/users`, {
+	const response = await fetch(`${API_URL_AUTH}/register`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
@@ -40,7 +40,7 @@ export const register = async (credentials: Pick<User, "username" | "password"> 
 };
 
 export const logout = async () => {
-	const response = await fetch(`${API_URL_AUTH}/logout`, {
+	const response = await fetch(`${API_URL_AUTH}/logout/`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
@@ -53,18 +53,14 @@ export const logout = async () => {
 	return response.json();
 };
 
-export const getUser = () => {
-	// const response = await fetch(`${API_URL}/me`, {
-	// 	credentials: "include",
-	// });
-	// if (!response.ok) {
-	// 	return null;
-	// }
-	// return response.json();
-	return {
-		username: "johndoe",
-		email: "john.doe@gmail.com",
-	};
+export const getUser = async () => {
+	const response = await fetch(`${API_URL_AUTH}/me/`, {
+		credentials: "include",
+	});
+	if (!response.ok) {
+		return null;
+	}
+	return response.json();
 };
 
 String.prototype.toTitleCase = function () {
