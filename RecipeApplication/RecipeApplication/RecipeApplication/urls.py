@@ -17,7 +17,7 @@ urlpatterns = [
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
     path('user/', include('user.urls')),
-    path('api/', include(router.urls)),  # routes REST générées
+    path('rest/', include(router.urls)),  # routes REST générées
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),  # route pour documentation API REST
     path('', include(wagtail_urls))
 ]
