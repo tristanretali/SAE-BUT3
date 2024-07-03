@@ -5,23 +5,18 @@ from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from .models import Recipe, Ingredient
 from rest_framework import viewsets
 from .serializers import RecipeSerializer,IngredientSerializer
-from rest_framework.decorators import action
 
-class IngredientViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = Ingredient.objects.all().order_by('nameClean')
-    serializer_class = IngredientSerializer
-    @action(detail=False, methods=['get'])
-    def search(self,request):
-            try:
-                nameClean = request.GET.get('name')
-                if nameClean:
-                    # Récupère les ingrédients qui contiennent 'nameClean' dans leur nom
-                    ingredients = Ingredient.objects.filter(nameClean__icontains=nameClean)
-                    # enleve tout ceux qui ont '' comme nomClean
-                    ingredients = [ingredient for ingredient in ingredients if ingredient.nameClean != '']
+
+@csrf_exempt
+def get_ingredients_by_name(request):
+    if request.method == 'GET':
+        try:
+            nameClean = request.GET.get('nameClean')
+            if nameClean:
+                # Récupère les ingrédients qui contiennent 'nameClean' dans leur nom
+                ingredients = Ingredient.objects.filter(nameClean__icontains=nameClean)
+                # enleve tout ceux qui ont '' comme nomClean
+                ingredients = [ingredient for ingredient in ingredients if ingredient.nameClean != '']
 
                     # Crée une liste des noms d'ingrédients uniques
                     unique_ingredient_names = list(set([ingredient.nameClean for ingredient in ingredients]))
@@ -112,3 +107,20 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 return JsonResponse({"detail": "Missing 'title' parameter"}, status=400)
         except Exception as e:
             return JsonResponse({"detail": f"Error getting recipes by title: {str(e)}"}, status=500)
+    else:
+        return HttpResponseBadRequest("Only GET method is supported")
+
+class IngredientViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = Ingredient.objects.all().order_by('nameClean')
+    serializer_class = IngredientSerializer
+
+
+class RecipeViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = Recipe.objects.all().order_by('title')
+    serializer_class = RecipeSerializer
