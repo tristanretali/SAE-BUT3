@@ -25,7 +25,7 @@ export const login = async (credentials: Pick<User, "username" | "password">) =>
 };
 
 export const register = async (credentials: Pick<User, "username" | "password"> & { confirmPassword: string }) => {
-	const response = await fetch(`${API_URL_AUTH}/register`, {
+	const response = await fetch(`${API_URL_AUTH}/register/`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",

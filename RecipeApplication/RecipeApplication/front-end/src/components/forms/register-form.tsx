@@ -12,14 +12,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormInput } from "./form-input";
 import { useState } from "react";
 
-import { login, register } from "@/lib/utils";
+import { register } from "@/lib/utils";
 import { navigate } from "@/app/actions";
 import { useToast } from "../ui/use-toast";
 import { useAuth } from "../providers/auth-provider";
 
 const registerFormSchema = z.object({
-	firstName: z.string().min(1, "First name is required"),
-	lastName: z.string().min(1, "Last name is required"),
+	username: z.string().min(1, "Username is required"),
 	email: z.string().email("Invalid email address"),
 	password: z.string().min(1, "Password is required").regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!-%*?&])[A-Za-z\d@$!-%*?&]{8,}$/, "Password must contain at least 8 characters, one letter, one number and one special character"),
 	confirmPassword: z.string().min(1, "Please confirm your password")
@@ -38,8 +37,7 @@ export function RegisterForm() {
 		resolver: zodResolver(registerFormSchema),
 		defaultValues: {
 			email: "",
-			firstName: "",
-			lastName: "",
+			username: "",
 			password: "",
 			confirmPassword: ""
 		},
@@ -65,20 +63,12 @@ export function RegisterForm() {
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-				<div className="inline-flex space-x-4">
-					<FormField name="firstName" render={({ field }) => (
-						<FormInput label="First name">
-							<Input placeholder="John" {...field}/>
-						</FormInput>
-					)}>
-					</FormField>
-					<FormField name="lastName" render={({ field }) => (
-						<FormInput label="Last name">
-							<Input placeholder="Doe" {...field}/>
-						</FormInput>
-					)}>
-					</FormField>
-				</div>
+				<FormField name="username" render={({ field }) => (
+					<FormInput label="Username">
+						<Input placeholder="johndoe" {...field}/>
+					</FormInput>
+				)}>
+				</FormField>
 				<FormField name="email" render={({ field }) => (
 					<FormInput>
 						<Input placeholder="example@example.com" {...field}/>

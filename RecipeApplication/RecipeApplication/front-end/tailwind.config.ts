@@ -5,7 +5,10 @@ const { fontFamily } = require("tailwindcss/defaultTheme");
 const config = {
 	darkMode: ["class"],
 	content: [
-		"./pages/**/*.{ts,tsx}, ./components/**/*.{ts,tsx}, ./app/**/*.{ts,tsx}, ./src/**/*.{ts,tsx}",
+		"./pages/**/*.{ts,tsx}",
+		"./components/**/*.{ts,tsx}",
+		"./app/**/*.{ts,tsx}",
+		"./src/**/*.{ts,tsx}",
 		"./node_modules/@nextui-org/theme/dist/components/(select|listbox|divider|popover|button|ripple|spinner|scroll-shadow).js",
 	],
 	prefix: "",
@@ -78,7 +81,7 @@ const config = {
 			},
 		},
 	},
-	plugins: [nextui()],
+	plugins: [require("tailwindcss-animate"), nextui()],
 } satisfies Config;
 
 export default config;
