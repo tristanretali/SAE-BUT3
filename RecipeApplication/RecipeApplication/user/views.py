@@ -22,7 +22,7 @@ class UserViewSet(viewsets.ModelViewSet):
             password = request.data.get('password', None)
             # Voir pour le refaire fonctionner plus tard
             # user = authenticate(username=username, password=password)
-            user = User.objects.get(username=username)
+            user = User.objects.get(username=username, password=password)
             if user is not None:
                 django_login(request, user)
                 request.session['user_id'] = user.id
