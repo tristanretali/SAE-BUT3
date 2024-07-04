@@ -1,6 +1,7 @@
 from django.db import models
 from wagtail.admin.panels import FieldPanel
 from wagtail.snippets.models import register_snippet
+from django.contrib.auth.models import User
 
 
 class Ingredient(models.Model):
@@ -64,6 +65,7 @@ class Recipe(models.Model):
     cuisines = models.ManyToManyField(Cuisine, blank=True)
     instructions = models.TextField(blank=True, null=True)
     analyzedInstructions = models.ManyToManyField(AnalyzedInstruction, blank=True)
+    users = models.ManyToManyField(User, blank=True)
 
     def __str__(self):
         return self.title
