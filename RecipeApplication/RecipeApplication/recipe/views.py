@@ -9,10 +9,11 @@ from rest_framework.decorators import action
 
 class IngredientViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows users to be viewed or edited.
+    API endpoint that allows ingredients to be viewed or edited.
     """
     queryset = Ingredient.objects.all().order_by('nameClean')
     serializer_class = IngredientSerializer
+    
     @action(detail=False, methods=['get'])
     def search(self,request):
             try:
@@ -42,10 +43,16 @@ class IngredientViewSet(viewsets.ModelViewSet):
 
 class RecipeViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows users to be viewed or edited.
+    API endpoint that allows recipes to be viewed or edited.
     """
     queryset = Recipe.objects.all().order_by('title')
     serializer_class = RecipeSerializer
+    
+    @action(detail=False, methods=['get'])
+    def count(self,request):
+        return JsonResponse({"count": Recipe.objects.count()})
+
+            
     @action(detail=False, methods=['get'])
     def search(self,request):
         try:

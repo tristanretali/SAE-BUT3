@@ -38,15 +38,15 @@ export default function NavigationUserDropdown() {
 							</div>
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
-						{user.isSuperuser && (
-							<Link href={`${WAGTAIL_URL}/admin`}>
-								<DropdownMenuItem>
+						{user.superUser && (
+							<DropdownMenuItem asChild>
+								<Link href={`${WAGTAIL_URL}/admin`}>
 									<Icons.role className="mr-2 w-4 h-4"/>
 									Admin panel
+								</Link>
 							</DropdownMenuItem>
-							</Link>
 						)}
-						<DropdownMenuItem>
+						<DropdownMenuItem disabled={true}>
 							<Icons.user className="mr-2 w-4 h-4"/>
 							Profile
 						</DropdownMenuItem>
