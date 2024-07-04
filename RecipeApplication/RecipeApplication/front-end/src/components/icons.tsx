@@ -1,4 +1,4 @@
-import { BarChart, BarChart2, ChevronLeft, CookieIcon, CookingPot, CookingPotIcon, CreditCard, HeartIcon, LeafyGreenIcon, Lock, LogOut, LucideIcon, Shield, Star, StarIcon, TimerIcon, User, Users, VeganIcon } from "lucide-react";
+import { BarChart, BarChart2, ChevronLeft, CookieIcon, CookingPot, CookingPotIcon, CreditCard, HeartIcon, LeafyGreenIcon, Lock, LogOut, LucideIcon, Shield, Star, StarIcon, TimerIcon, User, Users, UtensilsIcon, VeganIcon } from "lucide-react";
 
 export type Icon = LucideIcon;
 
@@ -17,4 +17,5 @@ export const Icons = {
 	vegan: VeganIcon,
 	vegetarian: LeafyGreenIcon,
 	like: HeartIcon,
+	servings: UtensilsIcon,
 } as const;
