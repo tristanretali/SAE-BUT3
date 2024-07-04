@@ -1,4 +1,7 @@
 from django.db import models
+from wagtail.admin.panels import FieldPanel
+from wagtail.snippets.models import register_snippet
+
 
 class Ingredient(models.Model):
     ingredient_id = models.IntegerField()
@@ -37,13 +40,16 @@ class AnalyzedInstruction(models.Model):
     def __str__(self):
         return self.name or "Instruction"
 
+
 class Cuisine(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
- 
+
     def __str__(self):
         return self.name
 
+
+@register_snippet
 class Recipe(models.Model):
     vegetarian = models.BooleanField(default=False)
     vegan = models.BooleanField(default=False)
@@ -61,3 +67,18 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.title
+
+    panels = [
+        FieldPanel('vegetarian'),
+        FieldPanel('vegan'),
+        FieldPanel('cheap'),
+        FieldPanel('healthScore'),
+        FieldPanel('title'),
+        FieldPanel('readyInMinutes'),
+        FieldPanel('servings'),
+        FieldPanel('image'),
+        FieldPanel('ingredients'),
+        FieldPanel('summary'),
+        FieldPanel('cuisines'),
+        FieldPanel('instructions'),
+    ]
