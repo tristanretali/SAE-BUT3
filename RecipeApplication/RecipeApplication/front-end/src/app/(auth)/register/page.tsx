@@ -9,11 +9,11 @@ import { RegisterForm } from "@/components/forms/register-form";
 export default function RegisterPage() {
 
 	return (
-		<div className="flex h-screen w-screen flex-row items-center justify-center">
-			<div className="w-1/2 h-full bg-primary">
+		<div className="max-sm:container flex h-screen w-screen flex-row items-center justify-center">
+			<div className="w-1/2 h-full bg-primary hidden md:flex">
 
 			</div>
-			<div className="flex-1">
+			<div className="flex-auto md:flex-1">
 				<Link
 					href="/"
 					className={cn(

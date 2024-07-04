@@ -2,7 +2,5 @@ export interface User {
 	username: string;
 	email: string;
 	password: string;
-	isSuperuser: boolean;
+	superUser: boolean;
 }
-
-export type Role = "user" | "admin";
