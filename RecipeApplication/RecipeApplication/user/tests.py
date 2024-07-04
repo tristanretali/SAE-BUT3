@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework.test import APIClient
 from .serializers import UserSerializer
 from rest_framework import status
-import os
+from django.contrib.auth.models import Group
 
 
 class UserTest(TestCase):
@@ -30,6 +30,7 @@ class UserTest(TestCase):
 class RESTUSerTests(TestCase):
     def setUp(self):
         self.client = APIClient()
+        Group.objects.create(name='Editors')
         self.pascal = User.objects.create_user('pascal', 'pascal@test.com', 'pascal')
         self.client.force_authenticate(user=self.pascal)
         self.user1 = User.objects.create_user(username="Test user", password="user", email="user@test.net")
