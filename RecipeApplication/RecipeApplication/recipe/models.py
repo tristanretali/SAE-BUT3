@@ -1,6 +1,7 @@
 from django.db import models
 from wagtail.admin.panels import FieldPanel
 from wagtail.snippets.models import register_snippet
+from django.contrib.auth.models import User
 
 
 class Ingredient(models.Model):
@@ -51,19 +52,19 @@ class Cuisine(models.Model):
 
 @register_snippet
 class Recipe(models.Model):
-    vegetarian = models.BooleanField(default=False)
-    vegan = models.BooleanField(default=False)
-    cheap = models.BooleanField(default=False)
-    healthScore = models.IntegerField(default=0)
-    title = models.CharField(max_length=255)
-    readyInMinutes = models.IntegerField(null=True, blank=True)
-    servings = models.IntegerField(null=True, blank=True)
-    image = models.TextField(blank=True, null=True)
-    ingredients = models.ManyToManyField(Ingredient)
-    summary = models.TextField(blank=True, null=True)
-    cuisines = models.ManyToManyField(Cuisine, blank=True)
-    instructions = models.TextField(blank=True, null=True)
-    analyzedInstructions = models.ManyToManyField(AnalyzedInstruction, blank=True)
+    vegetarian = models.BooleanField(default=False, verbose_name="Vegetarian?")
+    vegan = models.BooleanField(default=False, verbose_name="Vegan?")
+    cheap = models.BooleanField(default=False, verbose_name="Cheap?")
+    healthScore = models.IntegerField(default=0, verbose_name="Health Score")
+    title = models.CharField(max_length=255, verbose_name="Name of the recipe")
+    readyInMinutes = models.IntegerField(null=True, blank=True, verbose_name="Time to prepare (in minutes)")
+    servings = models.IntegerField(null=True, blank=True, verbose_name="Number of servings")
+    image = models.TextField(blank=True, null=True, verbose_name="Image URL")
+    ingredients = models.ManyToManyField(Ingredient, verbose_name="Ingredients")
+    summary = models.TextField(blank=True, null=True, verbose_name="Summary")
+    cuisines = models.ManyToManyField(Cuisine, blank=True, verbose_name="Cuisines")
+    instructions = models.TextField(blank=True, null=True, verbose_name="Instructions")
+    analyzedInstructions = models.ManyToManyField(AnalyzedInstruction, blank=True, verbose_name="Analyzed Instructions")
 
     def __str__(self):
         return self.title
