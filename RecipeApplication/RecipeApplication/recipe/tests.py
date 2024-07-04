@@ -1,11 +1,65 @@
 from django.test import TestCase
 from recipe.models import Ingredient,Recipe,Cuisine,Equipment,Step,AnalyzedInstruction
-from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
-from .models import Article
-from .serializers import ArticleSerializer
+from .serializers import RecipeSerializer
+
+class RESTTests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        # self.pascal = User.objects.create_user('pascal', 'pascal@test.com', 'pascal')
+        # make all request authenticated by default
+        #self.client.force_authenticate(user=self.pascal)
+        # store 3 articles in test database
+        # self.article1 = Article.objects.create(titre="Test Titre", contenu="Test Contenu")
+        # self.article2 = Article.objects.create(titre="Test Titre 2", contenu="Test Contenu 2")
+        # self.article3 = Article.objects.create(titre="Article 3", contenu="Contenu 3")
+
+    def test_list_articles(self):
+        response = self.client.get('/rest/recipes/search?title=chicken')
+        print(response)
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+
+        # articles = Article.objects.all().order_by('titre')
+        # serializer_data = ArticleSerializer(articles, many=True).data
+        # self.assertEqual(response.data, serializer_data)
+        # self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # self.client.force_authenticate(user=None)
+
+    # def test_get_article(self):
+    #     # get article with id 1
+    #     response = self.client.get("/rest/articles/1/")
+    #     # compare content with article1
+    #     serializer_data = ArticleSerializer(self.article1).data
+    #     self.assertEqual(response.data, serializer_data)
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #     self.client.force_authenticate(user=None)
+
+    # def test_post_article(self):
+    #     new_data = {'titre': 'Nouveau Titre', 'contenu': 'Nouveau Contenu'}
+    #     response = self.client.post("/rest/articles/", new_data, format='json')
+    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    #     self.client.force_authenticate(user=None)
+
+    # def test_modify_article(self):
+    #     new_data = {'titre': 'Nouveau Titre', 'contenu': 'Nouveau Contenu'}
+    #     # update article with id 1 with new_data
+    #     response = self.client.put("/rest/articles/1/", data=new_data)
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #     self.article1.refresh_from_db() # refresh article1 with data from database 
+    #     self.assertEqual(self.article1.titre, new_data['titre'])
+    #     self.assertEqual(self.article1.contenu, new_data['contenu'])
+    #     self.client.force_authenticate(user=None)
+
+    # def test_delete_article(self):
+    #     # delete article with id 1
+    #     response = self.client.delete("/rest/articles/1/")
+    #     self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+    #     # check that article does not exist anymore in database        
+    #     with self.assertRaises(Article.DoesNotExist):
+    #         Article.objects.get(id=self.article1.id)
+    #     self.client.force_authenticate(user=None)
 
 
 class IngredientTests(TestCase):
