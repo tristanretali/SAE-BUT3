@@ -1,5 +1,6 @@
 "use client"
 
+import { WAGTAIL_URL } from "@/lib/constants";
 import { Logo } from "../logo";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList } from "../ui/navigation-menu";
 import { Separator } from "../ui/separator";
@@ -16,10 +17,10 @@ export function RecipyNavbar() {
 						<Logo withText={true} size={35}/>
 					</NavigationMenuItem>
 				</NavigationMenuList>
-				<NavigationMenuList className="space-x-6">
+				<NavigationMenuList	 className="space-x-6">
 				</NavigationMenuList>
 				<NavigationMenuList className="space-x-7">
-					<NavigationLink href="/docs" className="text-primary/80">
+					<NavigationLink href={`${WAGTAIL_URL}/admin/snippets/recipe/recipe/add/`} className="text-primary/80">
 						Suggest a recipe
 					</NavigationLink>
 					<NavigationMenuItem className="inline-flex">

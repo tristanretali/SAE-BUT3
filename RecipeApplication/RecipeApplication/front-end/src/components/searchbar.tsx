@@ -15,7 +15,7 @@ type SearchbarProps = {
 
 export function Searchbar({ className, value }: Partial<SearchbarProps>) {
 
-	const [searchValue, setSearchValue] = useState(value);
+	const [searchValue, setSearchValue] = useState(value || "");
 
 	const searchURL = `/search?q=${searchValue}`;
 

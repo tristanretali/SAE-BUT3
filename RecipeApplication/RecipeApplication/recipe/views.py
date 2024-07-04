@@ -52,7 +52,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def count(self,request):
         return JsonResponse({"count": Recipe.objects.count()})
-
+    
     @action(detail=True, methods=['post'])
     def favori(self,request, pk=None):
         try:
