@@ -26,25 +26,20 @@ export function RecipeCard({recipe}: RecipeCardProps) {
 		<Card className="relative">
 			<RecipeFavorite/>
 			<CardHeader className="p-0 mb-2">
-				<Image src={recipe.image} alt={recipe.title} className="rounded-t-md w-full select-none object-cover h-44" width={200} height={200}/>
+				<Image src={recipe.image || "https://images.pexels.com/photos/9013258/pexels-photo-9013258.jpeg"} alt={recipe.title} className="rounded-t-md w-full select-none object-cover h-44" width={200} height={200}/>
 			</CardHeader>
 			<CardContent className="space-y-4 overflow-hidden">
 				<CardTitle className="text-lg font-bold text-foreground truncate" title={recipe.title}>{recipe.title}</CardTitle>
 				<div className="w-full text-muted-foreground flex *:flex-1 space-x-3">
-					<RecipeTag>
+					<RecipeTag value={recipe.servings}>
 						<Icons.servings className="h-4 w-4"/>
-						<p>{recipe.servings}</p>
 					</RecipeTag>
-					<RecipeTag>
+					<RecipeTag value={recipe.readyInMinutes?.toFixed(0)} valueSuffix="min">
 						<Icons.time className="h-5 w-5" width={50}/>
-						<p>{recipe.readyInMinutes.toFixed(0)}min</p>
 					</RecipeTag>
-					{getDiet() && (
-						<RecipeTag className="bg-green-200 text-lime-600 overflow-hidden whitespace-nowrap">
-							{getDiet()?.icon}
-							<p className="truncate">{getDiet()?.name}</p>
-						</RecipeTag>
-					)}
+					<RecipeTag className="bg-green-200 text-lime-600 overflow-hidden whitespace-nowrap" value={getDiet()?.name}>
+						{getDiet()?.icon}
+					</RecipeTag>
 				</div>
 			</CardContent>
 			<CardFooter>

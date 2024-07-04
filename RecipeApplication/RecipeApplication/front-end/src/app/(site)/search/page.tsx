@@ -50,8 +50,8 @@ export default function Page() {
 		}
 		return (
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-14 w-5/6">
-				{recipes?.map((recipe) => (
-					<RecipeCard key={recipe.instructions} recipe={recipe}/>
+				{recipes?.map((recipe, index) => (
+					<RecipeCard key={index} recipe={recipe}/>
 				))}
 			</div>
 		)
