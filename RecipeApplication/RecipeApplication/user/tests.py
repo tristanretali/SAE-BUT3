@@ -22,8 +22,8 @@ class UserTest(TestCase):
         self.assertEqual(user.email, "bob@test.net")
 
     def test_delete_user(self):
-        User.objects.filter(username__startswith="Test").delete()  # remove 2 articles from 3
-        users = User.objects.all()  # 1 article should be remaining
+        User.objects.filter(username__startswith="Test").delete()
+        users = User.objects.all()
         self.assertEqual(users.count(), 1)
 
 

@@ -23,10 +23,8 @@ class Command(BaseCommand):
                     instructions=item.get('instructions', '')
                 )
                 
-                # Sauvegardez l'objet Recipe pour lui attribuer un ID
                 recipe.save()
 
-                # Ajoutez les cuisines après avoir sauvegardé l'objet Recipe
                 cuisines = item.get('cuisines', [])
                 for cuisine_name in cuisines:
                     cuisine, created = Cuisine.objects.get_or_create(name=cuisine_name)
@@ -46,12 +44,6 @@ class Command(BaseCommand):
                         )
                         recipe.ingredients.add(ingredient)
 
-                # # Ajoutez les ingrédients après avoir sauvegardé l'objet Recipe
-                # ingredients_ids = item.get('ingredients_ids', [])
-                # ingredients = Ingredient.objects.filter(id__in=ingredients_ids) if ingredients_ids else []
-                # recipe.ingredients.set(ingredients)
-
-                # Ajoutez les analyzedInstructions après avoir sauvegardé l'objet Recipe
                 analyzed_instructions = item.get('analyzedInstructions', [])
                 for instruction_data in analyzed_instructions:
                     instruction = AnalyzedInstruction.objects.create(name=instruction_data.get('name', ''))
