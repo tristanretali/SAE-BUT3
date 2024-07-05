@@ -31,3 +31,4 @@ Ce projet est un site web qui permet de trouver des recettes à cuisiner. Les ut
 
 - **Tests unitaires** : Tests unitaires pour vérifier le bon fonctionnement des fonctionnalités.
 - **Tests REST pour les utilisateurs** : Tests pour vérifier les endpoints REST relatifs aux utilisateurs.
+
