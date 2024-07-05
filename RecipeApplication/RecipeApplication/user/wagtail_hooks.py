@@ -1,6 +1,5 @@
 from django.contrib.auth.models import Group
 from wagtail import hooks
-from django.urls import reverse
 from wagtail.admin.menu import MenuItem
 from django.shortcuts import redirect
 

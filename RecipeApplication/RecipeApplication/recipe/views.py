@@ -6,7 +6,8 @@ from .models import Recipe, Ingredient
 from rest_framework import viewsets
 from .serializers import RecipeSerializer,IngredientSerializer
 from rest_framework.decorators import action
-from django.contrib.auth import get_user
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class IngredientViewSet(viewsets.ModelViewSet):
     """
