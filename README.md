@@ -19,6 +19,10 @@ Ce projet est un site web qui permet de trouver des recettes à cuisiner. Les ut
 - **Modification** : Les administrateurs peuvent modifier les recettes et les utilisateurs via l'interface Wagtail.
 - **Suppression** : Les administrateurs peuvent supprimer les recettes et les utilisateurs via l'interface Wagtail.
 - **Affichage** : Les administrateurs peuvent afficher les recettes et les utilisateurs via l'interface Wagtail.
+- **Hooks** : Il y 3 hooks : 
+  - `after_create_snippet` : Redirige l'utilisateur vers le site web après la création d'une recette.
+  - `register_admin_menu_item` : Permet de rajouter un lien pour retourner sur le site web depuis l'interface Wagtail.
+  - `after_create_user` : Assigne un groupe par défaut à un utilisateur après sa création.
 
 ## Commandes
 
@@ -32,3 +36,33 @@ Ce projet est un site web qui permet de trouver des recettes à cuisiner. Les ut
 - **Tests unitaires** : Tests unitaires pour vérifier le bon fonctionnement des fonctionnalités.
 - **Tests REST pour les utilisateurs** : Tests pour vérifier les endpoints REST relatifs aux utilisateurs.
 
+Pour lancer les test, se rendre dans le dossier `RecipeApplication/RecipeApplication` et lancer la commande :
+```bash
+python manage.py test recipe.tests user.tests
+```
+
+## Installation
+
+### Front-end
+
+Se rendre dans le dossier `RecipeApplication/RecipeApplication/front-end`, puis lancer la commande :
+```bash
+npm|bun|pnpm|yarn install
+```
+<br>
+
+Enfin, pour lancer le front-end, faire :
+```bash
+npm|bun|pnpm|yarn run dev
+```
+
+### Back-end
+
+Se rendre dans le dossier `RecipeApplication/RecipeApplication`, puis lancer la commande :
+```bash
+pip install -r requirements.txt
+```
+
+Suivre le [quickstart Wagtail](https://docs.wagtail.org/en/stable/getting_started/tutorial.html)
+
+Effectuer les migrations
