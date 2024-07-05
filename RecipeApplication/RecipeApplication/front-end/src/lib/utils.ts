@@ -64,12 +64,15 @@ export const getUser = async () => {
 };
 
 export const favoriteRecipe = async (recipeId: string) => {
-	const response = await fetch(`${API_URL}/recipes/${recipeId}/favorite`, {
-		method: "PATCH",
+	const response = await fetch(`${API_URL}/users/add_favorite`, {
+		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
 		},
 		credentials: "include",
+		body: JSON.stringify({
+			recipe_id: recipeId,
+		}),
 	});
 	if (!response.ok) {
 		return null;
