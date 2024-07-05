@@ -5,6 +5,7 @@ import { Icons } from "@/components/icons";
 import { RecipeFavorite } from "./recipe-favorite";
 import { RecipeTag } from "./recipe-tag";
 import { Recipe } from "@/lib/recipe";
+import { useMutation } from "@tanstack/react-query";
 
 type RecipeCardProps = {
 	recipe: Recipe;
@@ -24,7 +25,7 @@ export function RecipeCard({recipe}: RecipeCardProps) {
 
 	return (
 		<Card className="relative">
-			<RecipeFavorite/>
+			<RecipeFavorite recipe={recipe}/>
 			<CardHeader className="p-0 mb-2">
 				<Image src={recipe.image || "https://images.pexels.com/photos/9013258/pexels-photo-9013258.jpeg"} alt={recipe.title} className="rounded-t-md w-full select-none object-cover h-44" width={200} height={200}/>
 			</CardHeader>

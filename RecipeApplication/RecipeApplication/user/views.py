@@ -68,3 +68,43 @@ class UserViewSet(viewsets.ModelViewSet):
                 return JsonResponse({"detail": "User is not logged in"}, status=400)
         except Exception as e:
             return HttpResponse('Error getting current user: {}'.format(str(e)), status=500)
+
+    @action(detail=True, methods=['get'])
+    def favoris(self, request, pk=None):
+        try:
+            user_id = request.session.get('user_id')
+            if user_id:
+                user = get_user(request)
+                if user is not None:
+                    return JsonResponse({
+						'recipes': [recipe for recipe in user.recipes]
+					})
+                else:
+                    return JsonResponse({"detail": "User not found"}, status=404)
+            else:
+                return JsonResponse({"detail": "User not authenticated"}, status=401)
+        except Exception as e:
+            return JsonResponse({"detail": f"Error to show recipes's: {str(e)}"}, status=500)
+        
+    @action(detail=True, methods=['post'])
+    def add_favori(self,request, pk=None):
+        try:
+            user_id = request.session.get('user_id')
+            recipe = request.data.get('recipe', None)
+            if user_id:
+                user = get_user(request)
+                if user is not None:
+                    if recipe in user.recipes.all():
+                        user.recipes.remove(recipe)
+                    else:
+                        user.recipes.add(recipe)
+                    user.save()
+                    return JsonResponse({
+                        'is_favorite': recipe in user.recipes.all()
+                    })
+                else:
+                    return JsonResponse({"detail": "User not found"}, status=404)
+            else:
+                return JsonResponse({"detail": "User not authenticated"}, status=401)
+        except Exception as e:
+            return JsonResponse({"detail": f"Error adding recipe to user's favorites: {str(e)}"}, status=500)

@@ -1,4 +1,5 @@
 export type Recipe = {
+	id: string;
 	analyzedInstructions: [];
 	cheap: boolean;
 	cuisines: [];
