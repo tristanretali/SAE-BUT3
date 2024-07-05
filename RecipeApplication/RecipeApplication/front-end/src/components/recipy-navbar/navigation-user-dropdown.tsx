@@ -50,9 +50,11 @@ export default function NavigationUserDropdown() {
 							<Icons.user className="mr-2 w-4 h-4"/>
 							Profile
 						</DropdownMenuItem>
-						<DropdownMenuItem>
-							<Icons.like className="mr-2 w-4 h-4"/>
-							Favourites
+						<DropdownMenuItem asChild>
+							<Link href="/favorites">
+								<Icons.like className="mr-2 w-4 h-4"/>
+								Favourites
+							</Link>
 						</DropdownMenuItem>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem onClick={handleLogout} className="text-destructive">
