@@ -9,6 +9,7 @@ class Command(BaseCommand):
         recipes = recover_api_data.recover_one_hundred_recipes(550)
         for item in recipes:
             try:
+                # Créez l'objet Recipe sans les champs ManyToMany
                 recipe = Recipe(
                     vegetarian=item.get('vegetarian', False),
                     vegan=item.get('vegan', False),

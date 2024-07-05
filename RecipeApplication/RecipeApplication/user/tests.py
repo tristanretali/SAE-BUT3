@@ -1,6 +1,5 @@
 from django.test import TestCase
-from django.contrib.auth import get_user_model
-User = get_user_model()
+from django.contrib.auth.models import User
 from rest_framework.test import APIClient
 from .serializers import UserSerializer
 from rest_framework import status
@@ -31,6 +30,7 @@ class UserTest(TestCase):
 class RESTUSerTests(TestCase):
     def setUp(self):
         self.client = APIClient()
+        Group.objects.create(name='Editors')
         self.pascal = User.objects.create_user('pascal', 'pascal@test.com', 'pascal')
         self.client.force_authenticate(user=self.pascal)
         self.user1 = User.objects.create_user(username="Test user", password="user", email="user@test.net")
@@ -38,7 +38,7 @@ class RESTUSerTests(TestCase):
         self.user3 = User.objects.create_user(username="user3", password="user3", email="user3@test.net")
 
     def test_list_users(self):
-        response = self.client.get('/rest/users')
+        response = self.client.get('/rest/users/')
         users = User.objects.all().order_by('username')
         serializer_data = UserSerializer(users, many=True).data
         self.assertEqual(response.data, serializer_data)
@@ -46,7 +46,8 @@ class RESTUSerTests(TestCase):
         self.client.force_authenticate(user=None)
 
     def test_get_user(self):
-        response = self.client.get("/rest/users/2")
+        # get article with id 1
+        response = self.client.get("/rest/users/2/")
         serializer_data = UserSerializer(self.user1).data
         self.assertEqual(response.data, serializer_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -54,12 +55,12 @@ class RESTUSerTests(TestCase):
 
     def test_post_user(self):
         new_data = {'username': 'NouveauUser', 'password': 'NouveauUser', 'email': 'nouveau@test.net'}
-        response = self.client.post("/rest/users", new_data, format='json')
+        response = self.client.post("/rest/users/", new_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.client.force_authenticate(user=None)
 
     def test_delete_user(self):
-        response = self.client.delete("/rest/users/2")
+        response = self.client.delete("/rest/users/2/")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         with self.assertRaises(User.DoesNotExist):
             User.objects.get(id=self.user1.id)
