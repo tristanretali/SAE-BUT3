@@ -6,7 +6,7 @@ class Command(BaseCommand):
     help = 'Ajoute une recette à la base de données'
 
     def handle(self, *args, **kwargs):
-        recipes = recover_api_data.recover_one_hundred_recipes(0)
+        recipes = recover_api_data.recover_one_hundred_recipes(550)
         for item in recipes:
             try:
                 # Créez l'objet Recipe sans les champs ManyToMany
