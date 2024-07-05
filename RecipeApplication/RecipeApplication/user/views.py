@@ -1,12 +1,14 @@
 import json
 
-from django.contrib.auth import login as django_login, logout as django_logout, authenticate, get_user
+from django.contrib.auth import login as django_login, logout as django_logout, authenticate
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
-from django.views.decorators.csrf import csrf_exempt
 
-from django.contrib.auth.models import User
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
 from rest_framework.decorators import action
+from recipe.models import Recipe
+
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 from .serializers import UserSerializer
 
@@ -42,6 +44,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 user_id = request.session.get('user_id')
                 if user_id:
                     django_logout(request)
+                    request.session['user_id'] = None
                     return JsonResponse({"message": "Logout successful"}, status=200)
                 else:
                     return JsonResponse({"detail": "User is not logged in"}, status=400)
@@ -55,7 +58,7 @@ class UserViewSet(viewsets.ModelViewSet):
         try:
             user_id = request.session.get('user_id')
             if user_id:
-                user = get_user(request)
+                user = get_user_model().objects.get(pk=user_id)
                 if user is not None:
                     return JsonResponse({
                         'superUser': user.is_superuser,
@@ -69,15 +72,15 @@ class UserViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return HttpResponse('Error getting current user: {}'.format(str(e)), status=500)
 
-    @action(detail=True, methods=['get'])
-    def favoris(self, request, pk=None):
+    @action(detail=False, methods=['get'])
+    def favorites(self, request, pk=None):
         try:
             user_id = request.session.get('user_id')
             if user_id:
-                user = get_user(request)
+                user = get_user_model().objects.get(pk=user_id)
                 if user is not None:
                     return JsonResponse({
-						'recipes': [recipe for recipe in user.recipes]
+						'recipes': list(user.favorite_recipes.values())
 					})
                 else:
                     return JsonResponse({"detail": "User not found"}, status=404)
@@ -86,25 +89,27 @@ class UserViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return JsonResponse({"detail": f"Error to show recipes's: {str(e)}"}, status=500)
         
-    @action(detail=True, methods=['post'])
-    def add_favori(self,request, pk=None):
+    @action(detail=False, methods=['POST'])
+    def add_favorite(self, request, pk=None):
         try:
             user_id = request.session.get('user_id')
-            recipe = request.data.get('recipe', None)
             if user_id:
-                user = get_user(request)
+                user = get_user_model().objects.get(pk=user_id)
                 if user is not None:
-                    if recipe in user.recipes.all():
-                        user.recipes.remove(recipe)
+                    recipe_id = request.data.get('recipe_id')
+                    recipe = Recipe.objects.get(pk=recipe_id)
+                    if (recipe is None):
+                        return JsonResponse({"detail": "Recipe not found"}, status=404)
+                    if (recipe in user.favorite_recipes.all()):
+                        user.favorite_recipes.remove(recipe)
                     else:
-                        user.recipes.add(recipe)
-                    user.save()
+                        user.favorite_recipes.add(recipe)
                     return JsonResponse({
-                        'is_favorite': recipe in user.recipes.all()
-                    })
+						'is_favorite': recipe in user.favorite_recipes.all()
+					})
                 else:
                     return JsonResponse({"detail": "User not found"}, status=404)
             else:
                 return JsonResponse({"detail": "User not authenticated"}, status=401)
         except Exception as e:
-            return JsonResponse({"detail": f"Error adding recipe to user's favorites: {str(e)}"}, status=500)
+            return JsonResponse({"detail": f"Error to add favorite: {str(e)}"}, status=500)

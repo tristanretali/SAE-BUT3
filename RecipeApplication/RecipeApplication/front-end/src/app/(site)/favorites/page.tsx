@@ -1,23 +1,19 @@
 "use client";
 
-import { IngredientSelect } from "@/components/ingredient/ingredient-select";
 import { RecipeCard } from "@/components/recipe/recipe-card";
-import { Searchbar } from "@/components/searchbar";
 import { API_URL } from "@/lib/constants";
 import { Recipe } from "@/lib/recipe";
 import { Spinner } from "@nextui-org/spinner";
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
 
 export default function Page() {
 
-	const searchParams = useSearchParams()
-	const search = searchParams.get('q') || ''
-
 	const { data: recipes, isLoading } = useQuery<Recipe[]>({
-		queryKey: ['recipes', search],
+		queryKey: ['favorites'],
 		queryFn: async () => {
-			const response = await fetch(`${API_URL}/recipes/search?title=${search}`)
+			const response = await fetch(`${API_URL}/users/favorites`, {
+				credentials: "include",
+			})
 			const data = await response.json()
 			return data.recipes
 		}
@@ -36,7 +32,7 @@ export default function Page() {
 			return (
 				<div className="flex flex-col items-center justify-center h-full space-y-3">
 					<h1 className="font-bold text-3xl font-heading text-primary">Oh no!</h1>
-					<p>No recipes found for &quot;<span className="font-bold text-primary/50">{search}</span>&quot;</p>
+					<p>No recipes</p>
 				</div>
 			)
 		}
@@ -51,10 +47,6 @@ export default function Page() {
 
 	return (
 		<div className="my-10 space-y-10 flex flex-col items-center w-screen">
-			<Searchbar className="w-80" value={search}/>
-			<div className="w-3/4">
-				<IngredientSelect/>
-			</div>
 			{resultElement()}
 		</div>
 	)

@@ -6,8 +6,8 @@ from .models import Recipe, Ingredient
 from rest_framework import viewsets
 from .serializers import RecipeSerializer, IngredientSerializer
 from rest_framework.decorators import action
-from django.contrib.auth import get_user
-
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class IngredientViewSet(viewsets.ModelViewSet):
     """
@@ -47,53 +47,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def count(self, request):
         return JsonResponse({"count": Recipe.objects.count()})
-
-    @action(detail=True, methods=['post'])
-    def favori(self, request, pk=None):
-        try:
-            recipe = self.get_object()
-            user_id = request.session.get('user_id')
-            if user_id:
-                user = get_user(request)
-                if user is not None:
-                    if user in recipe.users.all():
-                        recipe.users.remove(user)
-                        is_favorite = False
-                    else:
-                        recipe.users.add(user)
-                        is_favorite = True
-                    user.save()
-
-                    return JsonResponse({
-                        'is_favorite': is_favorite
-                    })
-                else:
-                    return JsonResponse({"detail": "User not found"}, status=404)
-            else:
-                return JsonResponse({"detail": "User not authenticated"}, status=401)
-        except Exception as e:
-            return JsonResponse({"detail": f"Error adding recipe to user's favorites: {str(e)}"}, status=500)
-
-    @action(detail=True, methods=['get'])
-    def show_favori(self, request, pk=None):
-        try:
-            recipe = self.get_object()
-            if (recipe.users.count() != 0):
-                return JsonResponse({
-                    'users': [
-                        {
-                            'username': user.username,
-                            'email': user.email,
-                        }
-                        for user in recipe.users.all()
-                    ]
-                })
-            else:
-                return JsonResponse({"detail": "No user found"}, status=404)
-
-        except Exception as e:
-            return JsonResponse({"detail": f"Error to show user's: {str(e)}"}, status=500)
-
+            
     @action(detail=False, methods=['get'])
     def search(self, request):
         try:
@@ -116,6 +70,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return JsonResponse({
                 'recipes': [
                     {
+                        'id': recipe.id,
                         'title': recipe.title,
                         'readyInMinutes': recipe.readyInMinutes,
                         'servings': recipe.servings,
