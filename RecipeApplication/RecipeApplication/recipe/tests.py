@@ -25,8 +25,8 @@ class IngredientTests(TestCase):
         self.assertEqual(ingredient.aisle, "meat")
 
     def test_delete_article(self):
-        Ingredient.objects.filter(aisle__startswith="meat").delete()  # remove 2 articles from 3
-        ingredients = Ingredient.objects.all()  # 1 article should be remaining
+        Ingredient.objects.filter(aisle__startswith="meat").delete()
+        ingredients = Ingredient.objects.all()
         self.assertEqual(ingredients.count(), 2)
 
 
@@ -65,8 +65,6 @@ class RecipeTests(TestCase):
         self.recipe.analyzedInstructions.add(self.analyzed_instruction)
 
     def test_recipe_creation(self):
-        print(self.recipe)
-
         self.assertEqual(self.recipe.title, "Uber Nachos")
         self.assertEqual(self.recipe.healthScore, 100)
         self.assertFalse(self.recipe.vegetarian)
