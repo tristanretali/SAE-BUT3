@@ -63,6 +63,20 @@ export const getUser = async () => {
 	return response.json();
 };
 
+export const favoriteRecipe = async (recipeId: string) => {
+	const response = await fetch(`${API_URL}/recipes/${recipeId}/favorite`, {
+		method: "PATCH",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		credentials: "include",
+	});
+	if (!response.ok) {
+		return null;
+	}
+	return response.json();
+};
+
 String.prototype.toTitleCase = function () {
 	return this.replace(/\w\S*/g, function (txt) {
 		return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
