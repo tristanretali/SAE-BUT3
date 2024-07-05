@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from recipe.models import Cuisine
 
+
 class Command(BaseCommand):
     help = 'Ajoute un ingrédient à la base de données'
 
@@ -17,6 +18,7 @@ class Command(BaseCommand):
 
             self.stdout.write(self.style.SUCCESS('Ingrédient ajouté avec succès'))
         except KeyError:
-            self.stdout.write(self.style.WARNING('Utilisation: python manage.py add_ingredient -id <ingredient_id> -a <aisle> -im <image> -n <nameClean> -am <amount> -u <unit>'))
+            self.stdout.write(self.style.WARNING(
+                'Utilisation: python manage.py add_ingredient -id <ingredient_id> -a <aisle> -im <image> -n <nameClean> -am <amount> -u <unit>'))
         except Exception as e:
             self.stdout.write(self.style.ERROR(f'Une erreur est survenue: {e}'))
